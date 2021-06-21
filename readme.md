@@ -21,7 +21,7 @@
 ### 声明
 ```javascript
 
-import mbdpay from "mbdpay"
+import mbdpay from "mbdpay-sdk"
 
 let Mpay  = new mbdpay("appid","appkey")
 
