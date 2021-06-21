@@ -43,10 +43,11 @@ export default {
         resolve(),
         commonjs(),
         babel({
+            runtimeHelpers: true,
             presets: ['@babel/preset-env'],
             exclude: 'node_modules/**' // 仅仅转译我们的源码
         }),
-        uglify()
+        // uglify()
     ],
 
 
