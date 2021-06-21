@@ -37,6 +37,57 @@ class MbdPay {
     }
 
     /**
+     * 帮助方法
+     * @param {string} type 方法名
+     * @param {object} data 返回data
+     * 
+     * 帮助解析返回值
+     */
+    static Helper(type, { data }) {
+        let res = data;
+        if (!data.error) {
+            let old_data = data;
+            switch (type) {
+                case "wx_openid":
+                    let reg = data.toString().match(/window.location.href\=\'(.*)\'/);
+                    res = {
+                        data: old_data,
+                        url: reg ? reg[1] : null
+                    };
+                    break;
+                case "wx_js_prepay":
+                    break;
+                case "wx_h5_prepay":
+                    break;
+                case "alipay_pay":
+                    let arr = data.body.match(/<input.*?(?:\/>)/gi);
+                    let obj = {};
+                    for (let i in arr) {
+                        if (i == 0) {
+                            continue;
+                        }
+                        let reg = /name=\'(.*)\'.*value=\'(.*)\'/;
+                        let item_arr = arr[i].match(reg);
+                        obj[item_arr[1]] = item_arr[2];
+
+                    }
+                    let action_reg = data.body.match(/action=\'(.*)\' method/);
+                    let action = action_reg[1];
+                    res = {
+                        data: old_data,
+                        param: obj,
+                        action,
+                    };
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        return res;
+    }
+
+    /**
      * 获取openid跳转url 
      * @param {string}} target_url
      */
@@ -47,7 +98,7 @@ class MbdPay {
         let sign = MbdPay.CreateSign(options, this.app_key);
         options.sign = sign;
         let res = await axios.get(mbd_url_config.openid, options);
-        res.data = MbdPay.helper("wx_openid", res);
+        res.data = MbdPay.Helper("wx_openid", res);
         return res;
     }
 
@@ -61,7 +112,7 @@ class MbdPay {
         let sign = MbdPay.CreateSign(options, this.app_key);
         options.sign = sign;
         let res = await axios.post(mbd_url_config.wx_prepay, options)
-        res.data = MbdPay.helper("wx_js_prepay", res);
+        res.data = MbdPay.Helper("wx_js_prepay", res);
         return res;
     }
 
@@ -75,7 +126,7 @@ class MbdPay {
         let sign = MbdPay.CreateSign(options, this.app_key);
         options.sign = sign;
         let res = await axios.post(mbd_url_config.wx_prepay, options)
-        res.data = MbdPay.helper("wx_h5_prepay", res);
+        res.data = MbdPay.Helper("wx_h5_prepay", res);
         return res;
     }
 
@@ -88,7 +139,7 @@ class MbdPay {
         let sign = MbdPay.CreateSign(options, this.app_key);
         options.sign = sign;
         let res = await axios.post(mbd_url_config.alipay_pay, options);
-        res.data = MbdPay.helper("alipay_pay", res);
+        res.data = MbdPay.Helper("alipay_pay", res);
         return res;
     }
 
@@ -121,60 +172,9 @@ class MbdPay {
         return axios.post(mbd_url_config.search_order, options)
     }
 
-    /**
-     * 帮助方法
-     * @param {string} type 方法名
-     * @param {object} data 返回data
-     * 
-     * 帮助解析返回值
-     */
-    static helper(type, { data }) {
-        if (!data.error) {
-            let old_data = data;
-            let new_data = data;
-            switch (type) {
-                case "wx_openid":
-                    let reg = data.toString().match(/window.location.href\=\'(.*)\'/);
-                    new_data = {
-                        data: old_data,
-                        url: reg ? reg[1] : null
-                    };
-                    break;
-                case "wx_js_prepay":
-                    break;
-                case "wx_h5_prepay":
-                    break;
-                case "alipay_pay":
-                    let arr = data.body.match(/<input.*?(?:\/>)/gi);
-                    let obj = {};
-                    for (let i in arr) {
-                        if (i == 0) {
-                            continue;
-                        }
-                        let reg = /name=\'(.*)\'.*value=\'(.*)\'/;
-                        let item_arr = arr[i].match(reg);
-                        obj[item_arr[1]] = item_arr[2];
 
-                    }
-                    let action_reg = data.body.match(/action=\'(.*)\' method/);
-                    let action = action_reg[1];
-                    new_data = {
-                        data: old_data,
-                        param: obj,
-                        action,
-                    };
-                    break;
-                default:
-                    break;
-            }
-            return new_data;
-
-        }
-        return data;
-    }
 
 
 
 }
-
 export default MbdPay;

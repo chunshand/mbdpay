@@ -1,14 +1,15 @@
 {
-    "name": "mpay",
-    "version": "1.0.0",
+    "name": "mbdpay-sdk",
+    "version": "0.0.3",
     "description": "",
     "main": "./dist/bundle.js",
+    "module": "./dist/bundle.esm.js",
+    "browser": "./dist/bundle.min.js",
     "scripts": {
         "build": "rollup --config ./rollup.config.js",
         "test": "node ./test/index.js"
     },
     "keywords": [],
-    "type": "module",
     "author": "",
     "license": "ISC",
     "devDependencies": {

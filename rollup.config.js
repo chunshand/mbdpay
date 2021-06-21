@@ -5,29 +5,20 @@ import json from '@rollup/plugin-json'
 import { uglify } from "rollup-plugin-uglify";
 const path = require('path');
 const resolveFunc = _path => path.resolve(__dirname, './', _path);
+import pkg from './package.json';
 const outputs = [{
-    file: resolveFunc('dist/bundle.iife.js'),
-    format: 'iife',
-    name: "mbdpay",
-    exports: 'auto'
-}, {
-    file: resolveFunc('dist/bundle.js'),
+    file: pkg.main,
     format: 'umd',
     name: "mbdpay",
     exports: 'auto'
 
 }, {
-    file: resolveFunc('dist/bundle.min.js'),
-    format: 'umd',
-    name: "mbdpay",
-    exports: 'auto'
-}, {
-    file: resolveFunc('dist/bundle.common.js'),
+    file: pkg.main,
     format: 'cjs',
     name: "mbdpay",
     exports: 'auto'
 }, {
-    file: resolveFunc('dist/bundle.esm.js'),
+    file: pkg.module,
     format: 'esm',
     name: "mbdpay",
     exports: 'auto'

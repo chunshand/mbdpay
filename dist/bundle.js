@@ -898,7 +898,7 @@
 
 	              case 7:
 	                res = _context.sent;
-	                res.data = MbdPay.helper("wx_openid", res);
+	                res.data = MbdPay.Helper("wx_openid", res);
 	                return _context.abrupt("return", res);
 
 	              case 10:
@@ -944,7 +944,7 @@
 
 	              case 8:
 	                res = _context2.sent;
-	                res.data = MbdPay.helper("wx_js_prepay", res);
+	                res.data = MbdPay.Helper("wx_js_prepay", res);
 	                return _context2.abrupt("return", res);
 
 	              case 11:
@@ -988,7 +988,7 @@
 
 	              case 7:
 	                res = _context3.sent;
-	                res.data = MbdPay.helper("wx_h5_prepay", res);
+	                res.data = MbdPay.Helper("wx_h5_prepay", res);
 	                return _context3.abrupt("return", res);
 
 	              case 10:
@@ -1031,7 +1031,7 @@
 
 	              case 6:
 	                res = _context4.sent;
-	                res.data = MbdPay.helper("alipay_pay", res);
+	                res.data = MbdPay.Helper("alipay_pay", res);
 	                return _context4.abrupt("return", res);
 
 	              case 9:
@@ -1079,14 +1079,6 @@
 	      options.sign = sign;
 	      return axios__default['default'].post(mbd_url_config.search_order, options);
 	    }
-	    /**
-	     * 帮助方法
-	     * @param {string} type 方法名
-	     * @param {object} data 返回data
-	     * 
-	     * 帮助解析返回值
-	     */
-
 	  }], [{
 	    key: "CreateSign",
 	    value: // 创建签名
@@ -1102,19 +1094,27 @@
 	      sign = md5__default['default'](decodeURI(sign));
 	      return sign;
 	    }
+	    /**
+	     * 帮助方法
+	     * @param {string} type 方法名
+	     * @param {object} data 返回data
+	     * 
+	     * 帮助解析返回值
+	     */
+
 	  }, {
-	    key: "helper",
-	    value: function helper(type, _ref) {
+	    key: "Helper",
+	    value: function Helper(type, _ref) {
 	      var data = _ref.data;
+	      var res = data;
 
 	      if (!data.error) {
 	        var old_data = data;
-	        var new_data = data;
 
 	        switch (type) {
 	          case "wx_openid":
 	            var reg = data.toString().match(/window.location.href\=\'(.*)\'/);
-	            new_data = {
+	            res = {
 	              data: old_data,
 	              url: reg ? reg[1] : null
 	            };
@@ -1141,20 +1141,17 @@
 	            }
 
 	            var action_reg = data.body.match(/action=\'(.*)\' method/);
-	            console.log(action_reg);
 	            var action = action_reg[1];
-	            new_data = {
+	            res = {
 	              data: old_data,
 	              param: obj,
 	              action: action
 	            };
 	            break;
 	        }
-
-	        return new_data;
 	      }
 
-	      return data;
+	      return res;
 	    }
 	  }]);
 
