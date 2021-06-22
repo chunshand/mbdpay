@@ -46,7 +46,7 @@ Mpay.wx_js_prepay({
 ### 微信 h5 网页支付
 ```javascript
 
-let res = Mpay.wx_js_prepay({
+let res = Mpay.wx_h5_prepay({
     // description string 商品描述
     // amount_total number 商品价格
     // out_trade_no 订单号
